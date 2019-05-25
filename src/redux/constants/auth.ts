@@ -1,0 +1,5 @@
+export const GET_AUTH_TOKEN = 'auth/GET_AUTH_TOKEN';
+export const GET_AUTH_TOKEN_SUCCESS = 'auth/GET_AUTH_TOKEN_SUCCESS';
+export const GET_AUTH_TOKEN_FAILED = 'auth/GET_AUTH_TOKEN_FAILED';
+
+export const DESTROY_AUTH_TOKEN = 'auth/DESTROY_AUTH_TOKEN';
