@@ -4,6 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { AppStore, User } from 'models/store';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { UserInfo } from 'models/core';
+import { signOut, signInByToken } from 'redux/actions';
 
 const Container = styled.div`
 flex: 1;
@@ -14,26 +16,39 @@ justify-content: center;
 `;
 
 interface Props extends RouteComponentProps {
+  refreshToken: () => void;
+  signOut: () => void;
+  userInfo: UserInfo;
+  isLoading: boolean;
   isAuthenticated: boolean;
-  currentUser: User;
 }
 const App: React.FunctionComponent<Props> = React.memo(props => {
   if (!props.isAuthenticated) {
     props.history.push('/login');
   }
-  return (
+  const signOut = () => {
+    props.signOut();
+    props.history.push('/login');
+  };
+  return props.isLoading ? <p>Loading...</p> : (
     <Container>
-      <h1>React Boilderplate</h1>
+      <h1>{props.userInfo.name}</h1>
+      <button onClick={signOut}>Log Out</button>
     </Container>
   );
 })
 
 const mapStateToProps = (state: AppStore) => ({
+  isLoading: state.auth.isLoading,
   isAuthenticated: state.auth.isAuthenticated,
-  currentUser: state.auth.currentUser,
+  userInfo: state.auth.userInfo,
+});
+const mapDispatchToProps = dispatch => ({
+  refreshToken: () => dispatch(signInByToken()),
+  signOut: () => dispatch(signOut()),
 });
 const enhance = compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )
 export default enhance(App);

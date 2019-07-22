@@ -1,3 +1,5 @@
+import { UserInfo } from "./core";
+
 export interface User {
   id?: string;
   email?: string;
@@ -9,7 +11,7 @@ export interface AuthReducer {
   isLoading: boolean;
   isAuthenticated: boolean;
   token: string | null;
-  currentUser: User | null;
+  userInfo: UserInfo | null;
 }
 
 export interface AppStore {

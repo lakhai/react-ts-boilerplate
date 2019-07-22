@@ -16,6 +16,11 @@ class Api {
     });
   }
 
+  setUrl = (url: string) => {
+    this.baseUrl = url;
+    this.axiosInstance.defaults.baseURL = url;
+  }
+
   setHeaders = (key: string, value: string) => {
     this.axiosInstance.defaults.headers[key] = value;
     return this;
@@ -59,4 +64,4 @@ class Api {
     });
   }
 }
-export const ApiInstance = new Api('http://localhost:3001/');
+export const ApiInstance = new Api(process.env.REACT_APP_BW_API_URL);

@@ -1,30 +1,47 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import configStore from 'redux/store/configStore';
-import { PersistGate } from 'redux-persist/integration/react';
+import { connect } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 
-import LoginPage from 'containers/LoginPage';
+import { AppStore, UserInfo } from 'models';
+import { signInByToken } from 'redux/actions';
 import App from 'containers/App';
+import LoginPage from 'containers/LoginPage';
 
-library.add(fas);
-const { store, persistor } = configStore();
-
-const MainRouter: React.FC = () => {
-  return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Router>
-          <Switch>
-            <Route component={LoginPage} path="/login" />
-            <Route component={App} path="/" />
-          </Switch>
-        </Router>
-      </PersistGate>
-    </Provider>
-  );
+interface Props {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  userInfo: UserInfo | null;
+  refreshToken: () => void;
+};
+class MainRouter extends React.Component<Props> {
+  componentDidMount() {
+    if (this.props.isAuthenticated && !this.props.userInfo) {
+      this.props.refreshToken();
+    }
+  }
+  renderApp = () => {
+    if (this.props.userInfo && !this.props.isLoading) {
+      return <App />
+    }
+    return <p>Loading...</p>
+  }
+  render() {
+    return (
+      <Router>
+        <Switch>
+          <Route component={LoginPage} path="/login" />
+          <Route render={this.renderApp} path="/" />
+        </Switch>
+      </Router>
+    );
+  }
 }
-
-export default MainRouter;
+const mapStateToProps = (state: AppStore) => ({
+  isLoading: state.auth.isLoading,
+  isAuthenticated: state.auth.isAuthenticated,
+  userInfo: state.auth.userInfo,
+});
+const mapDispatchToProps = dispatch => ({
+  refreshToken: () => dispatch(signInByToken()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(MainRouter);

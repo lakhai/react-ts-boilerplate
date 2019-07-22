@@ -1,10 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
-import MainRouter from './MainRouter';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 
-ReactDOM.render(<MainRouter />, document.getElementById('root'));
+import configStore from 'redux/store/configStore';
+import MainRouter from './MainRouter';
+import './index.css';
+
+library.add(fas);
+const { store, persistor } = configStore();
+
+ReactDOM.render((
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <MainRouter />
+    </PersistGate>
+  </Provider>
+), document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
