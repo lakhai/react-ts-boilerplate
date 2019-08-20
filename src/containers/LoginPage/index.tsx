@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import ReactLogo from '../../logo.svg';
-import styled from 'helpers/styled';
+import styled, { css } from 'helpers/styled';
 import { AppStore } from 'models/store';
 import { signIn } from 'redux/actions';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -19,14 +18,14 @@ justify-content: center;
 overflow: hidden;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{ hasError?: boolean }>`
 width: 100%;
 box-sizing: border-box;
-padding: 10px;
-border: 3px solid #EDEAE4;
+padding: 8px 10px;
+border: 2px solid ${props => props.hasError ? '#EF6749' : '#EDEAE4'};
 border-radius: 3px;
 line-height: 24px;
-font-size: 16px;
+font-size: 14px;
 font-weight: 500;
 color: #3A3333;
 margin-bottom: 19px;
@@ -37,13 +36,14 @@ margin-bottom: 19px;
   opacity: .4;
 }
 `;
-const StyledLabel = styled.label`
+
+const StyledLabel = styled.label<{ hasError?: boolean }>`
 display: inline-block;
 text-align: left;
-font-size: 18px;
-line-height: 25px;
-color: #3A3333;
-font-weight: 500;
+font-size: 12px;
+line-height: 16px;
+color: ${props => props.hasError ? '#EF6749' : '#3A3333'};
+font-weight: 600;
 margin-bottom: 4px;
 `;
 
@@ -73,11 +73,29 @@ button.forgot {
 }
 `;
 
+const Oval = styled.div<{ isBottom?: boolean }>`
+height: 882px;
+width: 882px;
+border-radius: 50%;
+position: absolute;
+${props => {
+    return props.isBottom ? css`
+bottom: 54%;
+right: 57%;
+` : css`
+top: 80%;
+left: 50%;
+`
+  }}
+z-index: 5;
+background-color: #3B3B3B;
+`;
+
 const Input: React.FunctionComponent<any> = React.memo(props => {
   const { label, ...inputProps } = props;
   return (
     <>
-      <StyledLabel htmlFor={props.name || ''}>{props.label}</StyledLabel>
+      <StyledLabel htmlFor={props.name || ''} hasError={props.hasError}>{props.label}</StyledLabel>
       <StyledInput {...inputProps} id={props.name} />
     </>
   )
@@ -86,18 +104,25 @@ const Input: React.FunctionComponent<any> = React.memo(props => {
 const Form: React.FunctionComponent<any> = React.memo(props => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [emailError, setEmailError] = React.useState(false);
+  const [passwordError, setPasswordError] = React.useState(false);
   const onSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setEmailError(email.length === 0);
+    setPasswordError(password.length === 0);
+    if (!email.length || !password.length) {
+      return;
+    }
     props.onSubmit({ email, password });
   }
   return (
     <StyledForm onSubmit={onSubmit}>
-      <img src={ReactLogo} alt="React Boilerplate" />
       <Input
         disabled={props.isLoading}
         label="Email"
         type="email"
         name="email"
+        hasError={emailError}
         value={email}
         onChange={e => setEmail(e.currentTarget.value)}
         placeholder="john@doe.com"
@@ -105,6 +130,7 @@ const Form: React.FunctionComponent<any> = React.memo(props => {
       <Input
         disabled={props.isLoading}
         label="Password"
+        hasError={passwordError}
         type="password"
         name="password"
         value={password}
@@ -120,6 +146,7 @@ const Form: React.FunctionComponent<any> = React.memo(props => {
 });
 
 interface Props extends RouteComponentProps {
+  error?: string;
   isLoading: boolean;
   isAuthenticated: boolean;
   signIn(data): void;
@@ -152,7 +179,12 @@ class LoginContainer extends React.Component<Props, State> {
   render() {
     return (
       <MainContainer>
-        <Form isLoading={this.props.isLoading} onSubmit={this.login} onClickForgotPassword={this.forgotPassword} />
+        <Form
+          error={this.props.error}
+          onSubmit={this.login}
+          isLoading={this.props.isLoading}
+          onClickForgotPassword={this.forgotPassword}
+        />
       </MainContainer>
     )
   }

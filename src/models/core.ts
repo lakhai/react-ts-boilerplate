@@ -1,8 +1,17 @@
+export type OrNull<T> = T | null;
+
 export interface UserInfo {
-  name: string;
-  cafes: string[];
+  id: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  avatar: string;
   permissions: number[];
-  profilePhoto: string;
-  currentProfile?: { cafe: string, store: string };
+}
+
+export interface Goal {
+  id: string;
+  description: string;
+  reason?: string;
+  user: string;
 }

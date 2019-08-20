@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import { REHYDRATE } from 'redux-persist';
 import { AuthReducer } from "../../models/store";
 import * as actions from '../constants/auth';
-import { ApiInstance } from 'api';
+import { Hub } from 'api';
 
 const initialState: AuthReducer = {
   isLoading: false,
@@ -24,7 +24,7 @@ const auth = (state: AuthReducer = initialState, action: { type: string, payload
           isAuthenticated: false,
         }
       }
-      ApiInstance.setHeaders('Authorization', token);
+      Hub.setHeaders('Authorization', `Bearer ${token}`);
       return {
         ...state,
         token,
@@ -44,7 +44,7 @@ const auth = (state: AuthReducer = initialState, action: { type: string, payload
       };
     case actions.GET_AUTH_TOKEN_SUCCESS: {
       const { token, userInfo } = data.payload;
-      ApiInstance.setHeaders('Authorization', token);
+      Hub.setHeaders('Authorization', `Bearer ${token}`);
       Cookies.set('token', token);
       return {
         ...state,

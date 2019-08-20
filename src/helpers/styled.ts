@@ -1,5 +1,5 @@
 import * as styledComponents from "styled-components";
-import { AppTheme } from "../constants/theme";
+import { AppTheme } from "../constants/styledTheme";
 
 const {
   default: styled,

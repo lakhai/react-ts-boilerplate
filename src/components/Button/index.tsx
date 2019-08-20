@@ -5,9 +5,9 @@ padding: 10px;
 border-radius: 3px;
 background-color: #7876E0;
 color: #FFFFFF;
-font-size: 18px;
+font-size: 16px;
 font-weight: 500;
-line-height: 25px;
+line-height: 22px;
 text-align: center;
 margin-bottom: 14px;
 &:disabled {

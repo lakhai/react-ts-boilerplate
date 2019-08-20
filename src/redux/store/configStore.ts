@@ -2,12 +2,13 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import appState from '../reducers';
-import { persistReducer, persistStore } from 'redux-persist';
+import { persistReducer, persistStore, PersistConfig } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 
-const persistConfig = {
+const persistConfig: PersistConfig = {
   key: 'react-boilerplate-state',
   storage,
+  whitelist: [],
 }
 const persistedReducer = persistReducer(persistConfig, appState);
 export default function () {

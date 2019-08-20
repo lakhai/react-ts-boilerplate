@@ -1,11 +1,4 @@
-import { UserInfo } from "./core";
-
-export interface User {
-  id?: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-}
+import { UserInfo, Goal } from "./core";
 
 export interface AuthReducer {
   isLoading: boolean;
@@ -14,6 +7,12 @@ export interface AuthReducer {
   userInfo: UserInfo | null;
 }
 
+export interface GoalsReducer {
+  isLoading: boolean;
+  goals: Goal[];
+}
+
 export interface AppStore {
   auth: AuthReducer;
+  goals: GoalsReducer;
 }

@@ -8,6 +8,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 
 import configStore from 'redux/store/configStore';
 import MainRouter from './MainRouter';
+// import '@atlaskit/css-reset';
 import './index.css';
 
 library.add(fas);

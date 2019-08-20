@@ -64,4 +64,4 @@ class Api {
     });
   }
 }
-export const ApiInstance = new Api(process.env.REACT_APP_BW_API_URL);
+export const Hub = new Api(process.env.REACT_APP_API_URL);
